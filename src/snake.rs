@@ -1,3 +1,4 @@
+use std::collections::LinkedList;
 use piston_window::{Context, G2d};
 use piston_window::types::Color;
 
@@ -10,9 +11,13 @@ pub enum Direction {
     Right,
 }
 
+struct Block {
+    x: i32,
+    y: i32,
+}
+
 pub struct Snake {
-    pub y: i32,
-    pub x: i32,
+    body: LinkedList<Block>,
     pub dir: Direction,
 }
 
@@ -20,11 +25,27 @@ const SNAKE_COLOR: Color = [0.0,0.4,0.4,1.0];
 
 impl Snake  {
     pub fn new(x: i32, y: i32) -> Snake {
-        Snake {
+        let mut body: LinkedList<Block> = LinkedList::new();
+        body.push_back(Block {
+            x: x + 2,
+            y,
+        });
+        body.push_back(Block {
+            x: x + 1,
+            y,
+        });
+        body.push_back(Block {
             x,
             y,
+        });
+        Snake {
+            body,
             dir: Direction::Left,
         }
+    }
+    pub fn head_position(&self) -> (i32, i32) {
+        let head_block = self.body.front().unwrap();
+        (head_block.x, head_block.y)
     }
     pub fn update(&mut self) {
         let (dx, dy) = match self.dir {
@@ -33,10 +54,17 @@ impl Snake  {
             Direction::Left => (-1, 0),
             Direction::Right => (1, 0),
         };
-        self.x += dx;
-        self.y += dy;
+
+        let (head_x, head_y) = self.head_position();
+        self.body.push_front(Block {
+            x: head_x + dx,
+            y: head_y + dy,
+        });
+        self.body.pop_back();
     }
     pub fn draw(&self, con: &Context, g: &mut G2d) {
-        draw_block(self.x, self.y, SNAKE_COLOR, &con, g);
+        for block in &self.body {
+            draw_block(block.x, block.y, SNAKE_COLOR, &con, g);
+        }
     }
 }
