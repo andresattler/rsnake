@@ -3,6 +3,7 @@ extern crate rand;
 
 mod draw;
 mod game;
+mod snake;
 
 use piston_window::types::Color;
 use piston_window::*;
@@ -22,7 +23,7 @@ fn main() {
     let mut game = Game::new(4,4);
     while let Some(event) = window.next() {
         if let Some(Button::Keyboard(key)) = event.press_args() {
-            println!("{:?}", key);
+            game.key_pressed(key);
         }
         window.draw_2d(&event, |c, g| {
             clear(BACKGROUND_COLOR, g);
