@@ -1,23 +1,22 @@
 use piston_window::*;
+use piston_window::types::Color;
 
-use crate::snake::{Direction};
+use crate::snake::{Direction, Snake};
+use crate::draw::draw_block;
 
 pub struct Game {
-    pub snake_y: i32,
-    pub snake_x: i32,
-    pub snake_dir: Direction,
     waiting_time: f64,
+    pub snake: Snake,
 }
 
 const STEP_PERIOD: f64 = 0.1;
+const FOOD_COLOR: Color = [0.9,0.0,0.0,1.0];
 
 impl Game {
     pub fn new(x: i32, y: i32) -> Game {
         Game {
-            snake_y: y,
-            snake_x: x,
-            snake_dir: Direction::Up,
             waiting_time: 0.0,
+            snake: Snake::new(x,y),
         }
     }
     pub fn key_pressed(&mut self, key: Key) {
@@ -28,20 +27,20 @@ impl Game {
             Key::Right => Some(Direction::Right),
             _ => None
         };
-        self.snake_dir = dir.unwrap();
+        self.snake.dir = dir.unwrap();
     }
     pub fn update(&mut self, delta_time: f64) {
         self.waiting_time += delta_time;
         if self.waiting_time > STEP_PERIOD {
-            let (x, y) = match self.snake_dir {
-                Direction::Up => (0, -1),
-                Direction::Down => (0, 1),
-                Direction::Left => (-1, 0),
-                Direction::Right => (1, 0),
-            };
-            self.snake_x += x;
-            self.snake_y += y;
+            self.snake.update();
             self.waiting_time = 0.0;
         }
+    }
+    pub fn draw_food(con: &Context, g: &mut G2d) {
+        draw_block(5, 5, FOOD_COLOR, &con, g);
+    }
+    pub fn draw(&self, con: &Context, g: &mut G2d) {
+        self.snake.draw(&con, g);
+        Game::draw_food(&con, g);
     }
 }

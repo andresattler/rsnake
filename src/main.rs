@@ -8,7 +8,6 @@ mod snake;
 use piston_window::types::Color;
 use piston_window::*;
 
-use draw::draw_block;
 use game::Game;
 
 const BACKGROUND_COLOR: Color = [0.7, 0.7, 0.7, 1.0];
@@ -27,7 +26,7 @@ fn main() {
         }
         window.draw_2d(&event, |c, g| {
             clear(BACKGROUND_COLOR, g);
-            draw_block(game.snake_x, game.snake_y,[0.0,0.4,0.4,1.0], &c, g);
+            game.draw(&c, g);
         });
         event.update(|arg| {
             game.update(arg.dt);
