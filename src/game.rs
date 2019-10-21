@@ -50,6 +50,7 @@ impl Game {
             self.snake.update();
             let (snake_head_x, snake_head_y) = self.snake.head_position();
             if snake_head_x == self.food.x && snake_head_y == self.food.y {
+                self.snake.eat();
                 self.place_food();
             }
             self.waiting_time = 0.0;

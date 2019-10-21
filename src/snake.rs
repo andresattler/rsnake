@@ -19,6 +19,7 @@ pub struct Block {
 pub struct Snake {
     body: LinkedList<Block>,
     pub dir: Direction,
+    growing: bool,
 }
 
 const SNAKE_COLOR: Color = [0.0, 0.4, 0.4, 1.0];
@@ -32,11 +33,15 @@ impl Snake {
         Snake {
             body,
             dir: Direction::Left,
+            growing: false,
         }
     }
     pub fn head_position(&self) -> (i32, i32) {
         let head_block = self.body.front().unwrap();
         (head_block.x, head_block.y)
+    }
+    pub fn eat(&mut self) {
+        self.growing = true;
     }
     pub fn update(&mut self) {
         let (dx, dy) = match self.dir {
@@ -51,7 +56,11 @@ impl Snake {
             x: head_x + dx,
             y: head_y + dy,
         });
-        self.body.pop_back();
+        if self.growing == true {
+            self.growing = false;
+        } else {
+            self.body.pop_back();
+        }
     }
     pub fn draw(&self, con: &Context, g: &mut G2d) {
         for block in &self.body {
