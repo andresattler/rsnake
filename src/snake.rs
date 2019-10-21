@@ -1,6 +1,6 @@
-use std::collections::LinkedList;
-use piston_window::{Context, G2d};
 use piston_window::types::Color;
+use piston_window::{Context, G2d};
+use std::collections::LinkedList;
 
 use crate::draw::draw_block;
 
@@ -11,9 +11,9 @@ pub enum Direction {
     Right,
 }
 
-struct Block {
-    x: i32,
-    y: i32,
+pub struct Block {
+    pub x: i32,
+    pub y: i32,
 }
 
 pub struct Snake {
@@ -21,23 +21,14 @@ pub struct Snake {
     pub dir: Direction,
 }
 
-const SNAKE_COLOR: Color = [0.0,0.4,0.4,1.0];
+const SNAKE_COLOR: Color = [0.0, 0.4, 0.4, 1.0];
 
-impl Snake  {
+impl Snake {
     pub fn new(x: i32, y: i32) -> Snake {
         let mut body: LinkedList<Block> = LinkedList::new();
-        body.push_back(Block {
-            x: x + 2,
-            y,
-        });
-        body.push_back(Block {
-            x: x + 1,
-            y,
-        });
-        body.push_back(Block {
-            x,
-            y,
-        });
+        body.push_back(Block { x: x + 2, y });
+        body.push_back(Block { x: x + 1, y });
+        body.push_back(Block { x, y });
         Snake {
             body,
             dir: Direction::Left,
