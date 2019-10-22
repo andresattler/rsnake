@@ -4,11 +4,24 @@ use std::collections::LinkedList;
 
 use crate::draw::draw_block;
 
+#[derive(PartialEq)]
 pub enum Direction {
     Up,
     Down,
     Left,
     Right,
+}
+
+impl Direction {
+    pub fn opposite(&self) -> Direction {
+        use Direction::*;
+        match self {
+            Up => Down,
+            Down => Up,
+            Left => Right,
+            Right => Left,
+        }
+    }
 }
 
 pub struct Block {
