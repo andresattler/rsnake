@@ -36,12 +36,11 @@ impl Game {
     fn place_food(&mut self) {
         let mut rng = thread_rng();
         let mut random = |max| rng.gen_range(1, max - 1);
-        self.food.x = random(self.width);
-        self.food.y = random(self.height);
-        while Self::collides_with(self.food, &self.snake) {
+        while {
             self.food.x = random(self.width);
             self.food.y = random(self.height);
-        }
+            Self::collides_with(self.food, &self.snake)
+        } {}
     }
     pub fn key_pressed(&mut self, key: Key) {
         let dir = match key {
