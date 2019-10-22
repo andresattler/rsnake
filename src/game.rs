@@ -43,7 +43,7 @@ impl Game {
             _ => None,
         };
         if let Some(new_dir) = dir {
-            if new_dir.opposite() != self.snake.dir {
+            if -new_dir != self.snake.dir {
                 self.snake.dir = new_dir;
             }
         }

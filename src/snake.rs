@@ -3,8 +3,9 @@ use piston_window::{Context, G2d};
 use std::collections::LinkedList;
 
 use crate::draw::draw_block;
+use std::ops::Neg;
 
-#[derive(PartialEq)]
+#[derive(PartialEq, Clone, Copy)]
 pub enum Direction {
     Up,
     Down,
@@ -12,8 +13,10 @@ pub enum Direction {
     Right,
 }
 
-impl Direction {
-    pub fn opposite(&self) -> Direction {
+impl Neg for Direction {
+    type Output = Self;
+
+    fn neg(self) -> Direction {
         use Direction::*;
         match self {
             Up => Down,
