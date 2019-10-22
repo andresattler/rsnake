@@ -67,6 +67,15 @@ impl Game {
                 self.snake.eat();
                 self.place_food();
             }
+            if snake_head_x > self.width {
+                self.snake.move_to(0, snake_head_y);
+            } else if snake_head_x < 0 {
+                self.snake.move_to(self.width, snake_head_y);
+            } else if snake_head_y < 0 {
+                self.snake.move_to(snake_head_x, self.height);
+            } else if snake_head_y > self.height {
+                self.snake.move_to(snake_head_x, 0);
+            }
             self.waiting_time = 0.0;
         }
     }

@@ -14,7 +14,6 @@ pub enum Direction {
 }
 
 
-#[derive(Clone, Copy, PartialEq)]
 impl Neg for Direction {
     type Output = Self;
 
@@ -29,6 +28,7 @@ impl Neg for Direction {
     }
 }
 
+#[derive(Clone, Copy, PartialEq)]
 pub struct Block {
     pub x: i32,
     pub y: i32,
@@ -61,6 +61,17 @@ impl Snake {
     pub fn eat(&mut self) {
         self.growing = true;
     }
+    pub fn move_to(&mut self, x: i32, y: i32) {
+        self.body.push_front(Block {
+            x,
+            y,
+        });
+        if self.growing {
+            self.growing = false;
+        } else {
+            self.body.pop_back();
+        }
+    }
     pub fn update(&mut self) {
         let (dx, dy) = match self.dir {
             Direction::Up => (0, -1),
@@ -68,17 +79,8 @@ impl Snake {
             Direction::Left => (-1, 0),
             Direction::Right => (1, 0),
         };
-
         let (head_x, head_y) = self.head_position();
-        self.body.push_front(Block {
-            x: head_x + dx,
-            y: head_y + dy,
-        });
-        if self.growing {
-            self.growing = false;
-        } else {
-            self.body.pop_back();
-        }
+        self.move_to(head_x + dx, head_y + dy);
     }
     pub fn draw(&self, con: &Context, g: &mut G2d) {
         for block in &self.body {
