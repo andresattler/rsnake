@@ -13,6 +13,8 @@ pub enum Direction {
     Right,
 }
 
+
+#[derive(Clone, Copy, PartialEq)]
 impl Neg for Direction {
     type Output = Self;
 
@@ -33,7 +35,7 @@ pub struct Block {
 }
 
 pub struct Snake {
-    body: LinkedList<Block>,
+    pub body: LinkedList<Block>,
     pub dir: Direction,
     growing: bool,
 }
@@ -72,7 +74,7 @@ impl Snake {
             x: head_x + dx,
             y: head_y + dy,
         });
-        if self.growing == true {
+        if self.growing {
             self.growing = false;
         } else {
             self.body.pop_back();
