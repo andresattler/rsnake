@@ -42,6 +42,8 @@ impl Game {
             Self::collides_with(self.food, &self.snake)
         } {}
     }
+    /// Takes a pressed key (one of the arrow keys) and turns the snake around.
+    /// The snake is not allowed to go in the opposite direction as it would bite itself.
     pub fn key_pressed(&mut self, key: Key) {
         let dir = match key {
             Key::Up => Some(Direction::Up),
@@ -51,7 +53,9 @@ impl Game {
             _ => None,
         };
         if let Some(new_dir) = dir {
-            self.snake.dir = new_dir;
+            if -new_dir != self.snake.dir {
+                self.snake.dir = new_dir;
+            }
         }
     }
     pub fn update(&mut self, delta_time: f64) {
