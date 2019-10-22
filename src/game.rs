@@ -27,19 +27,13 @@ impl Game {
         }
     }
 
-    /// Checks whether or not the given Block collides with the
-    /// given Snake.
-    fn collides_with(block: Block, snake: &Snake) -> bool {
-        snake.body.iter().any(|&b| b == block)
-    }
-
     fn place_food(&mut self) {
         let mut rng = thread_rng();
         let mut random = |max| rng.gen_range(1, max - 1);
         while {
             self.food.x = random(self.width);
             self.food.y = random(self.height);
-            Self::collides_with(self.food, &self.snake)
+            self.snake.collides_with(self.food)
         } {}
     }
     /// Takes a pressed key (one of the arrow keys) and turns the snake around.
