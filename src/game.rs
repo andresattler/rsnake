@@ -26,11 +26,22 @@ impl Game {
             height,
         }
     }
+
+    /// Checks whether or not the given Block collides with the
+    /// given Snake.
+    fn collides_with(block: Block, snake: &Snake) -> bool {
+        snake.body.iter().any(|&b| b == block)
+    }
+
     fn place_food(&mut self) {
         let mut rng = thread_rng();
         let mut random = |max| rng.gen_range(1, max - 1);
         self.food.x = random(self.width);
         self.food.y = random(self.height);
+        while Self::collides_with(self.food, &self.snake) {
+            self.food.x = random(self.width);
+            self.food.y = random(self.height);
+        }
     }
     pub fn key_pressed(&mut self, key: Key) {
         let dir = match key {
@@ -70,7 +81,7 @@ mod tests {
     use super::*;
 
     fn dummy_game() -> Game {
-        Game::new(4, 4)
+        Game::new(4, 4, 20, 20)
     }
 
     #[test]
