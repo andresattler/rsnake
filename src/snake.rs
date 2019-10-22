@@ -13,7 +13,6 @@ pub enum Direction {
     Right,
 }
 
-
 impl Neg for Direction {
     type Output = Self;
 
@@ -64,14 +63,18 @@ impl Snake {
         self.growing = true;
     }
     pub fn move_to(&mut self, x: i32, y: i32) {
-        self.body.push_front(Block {
-            x,
-            y,
-        });
-        if self.growing {
-            self.growing = false;
+        let will_bite_itself = self.collides_with(Block { x, y });
+
+        if will_bite_itself || self.dead {
+            self.dead = true;
+            println!("Game Over!")
         } else {
-            self.body.pop_back();
+            self.body.push_front(Block { x, y });
+            if self.growing {
+                self.growing = false;
+            } else {
+                self.body.pop_back();
+            }
         }
     }
     pub fn collides_with(&self, block: Block) -> bool {
@@ -85,16 +88,7 @@ impl Snake {
             Direction::Right => (1, 0),
         };
         let (head_x, head_y) = self.head_position();
-        let will_bite_itself = self.collides_with(Block {
-            x: head_x + dx,
-            y: head_y + dy,
-        });
-
-        if will_bite_itself || self.dead {
-            self.dead = true;
-        } else {
-            self.move_to(head_x + dx, head_y + dy);
-        }
+        self.move_to(head_x + dx, head_y + dy);
     }
     pub fn draw(&self, con: &Context, g: &mut G2d) {
         for block in &self.body {
