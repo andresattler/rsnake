@@ -14,7 +14,7 @@ pub struct Game {
     game_over: bool,
 }
 
-const STEP_PERIOD: f64 = 0.1;
+const STEP_PERIOD: f64 = 0.05;
 const GAME_OVER_PERIOD: f64 = 0.5;
 const FOOD_COLOR: Color = [0.9, 0.0, 0.0, 1.0];
 

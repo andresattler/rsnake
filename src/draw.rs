@@ -14,7 +14,7 @@ pub fn to_coord_u32(game_coord: i32) -> u32 {
 pub fn draw_block(x: i32, y: i32, color: Color, con: &Context, g: &mut G2d) {
     rectangle(
         color,
-        [to_coord(x), to_coord(y), BLOCK_SIZE, BLOCK_SIZE],
+        [to_coord(x), to_coord(y), BLOCK_SIZE - 1.0, BLOCK_SIZE - 1.0],
         con.transform,
         g,
     );
