@@ -37,7 +37,7 @@ pub struct Snake {
     pub body: LinkedList<Block>,
     pub dir: Direction,
     growing: bool,
-    dead: bool,
+    pub dead: bool,
 }
 
 const SNAKE_COLOR: Color = [0.0, 0.4, 0.4, 1.0];
@@ -67,7 +67,6 @@ impl Snake {
 
         if will_bite_itself || self.dead {
             self.dead = true;
-            println!("Game Over!")
         } else {
             self.body.push_front(Block { x, y });
             if self.growing {

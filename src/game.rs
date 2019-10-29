@@ -11,9 +11,11 @@ pub struct Game {
     food: Block,
     width: i32,
     height: i32,
+    game_over: bool,
 }
 
 const STEP_PERIOD: f64 = 0.1;
+const GAME_OVER_PERIOD: f64 = 0.5;
 const FOOD_COLOR: Color = [0.9, 0.0, 0.0, 1.0];
 
 impl Game {
@@ -24,7 +26,19 @@ impl Game {
             food: Block { x: 5, y: 5 },
             width,
             height,
+            game_over: false,
         }
+    }
+
+    fn reset(&mut self) {
+        let mut rng = thread_rng();
+        let mut random = |max| rng.gen_range(1, max - 1);
+        let snake_x = random(self.width);
+        let snake_y = random(self.height);
+        self.waiting_time = 0.0;
+        self.snake = Snake::new(snake_x, snake_y);
+        self.place_food();
+        self.game_over = false;
     }
 
     fn place_food(&mut self) {
@@ -54,7 +68,12 @@ impl Game {
     }
     pub fn update(&mut self, delta_time: f64) {
         self.waiting_time += delta_time;
-        if self.waiting_time > STEP_PERIOD {
+
+        if self.game_over {
+            if self.waiting_time > GAME_OVER_PERIOD {
+                self.reset();
+            }
+        } else if self.waiting_time > STEP_PERIOD {
             self.snake.update();
             let (snake_head_x, snake_head_y) = self.snake.head_position();
             if snake_head_x == self.food.x && snake_head_y == self.food.y {
@@ -69,6 +88,9 @@ impl Game {
                 self.snake.move_to(snake_head_x, self.height);
             } else if snake_head_y > self.height {
                 self.snake.move_to(snake_head_x, 0);
+            }
+            if self.snake.dead {
+                self.game_over = true;
             }
             self.waiting_time = 0.0;
         }
